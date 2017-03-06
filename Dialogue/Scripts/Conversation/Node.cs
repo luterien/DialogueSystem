@@ -12,18 +12,18 @@ public class Node {
     [HideInInspector]
     public string id;
 
-    GUIStyle nodeStyle;
+    public GUIStyle nodeStyle;
 
     //public ConnectionPoint inPoint;
     //public ConnectionPoint outPoint;
 
-    float height = 100f;
+    float height = 5;
     float width = 200f;
 
     [HideInInspector]
     public bool isBeingDragged = false;
 
-    private bool initialized = false;
+    public bool initialized = false;
 
     [TextArea(3, 10)]
     public string text;
@@ -44,13 +44,11 @@ public class Node {
     }
 
     public void Enable() {
-
-        if (nodeStyle == null) { 
-            nodeStyle = new GUIStyle();
-            nodeStyle.normal.background = EditorGUIUtility.Load("Assets/green_button02.png") as Texture2D;
-            nodeStyle.alignment = TextAnchor.MiddleCenter;
-            nodeStyle.border = new RectOffset(12, 12, 12, 12);
-        }
+        
+        nodeStyle = new GUIStyle();
+        nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node1.png") as Texture2D;
+        nodeStyle.alignment = TextAnchor.MiddleCenter;
+        nodeStyle.border = new RectOffset(12, 12, 12, 12);
 
         if (id == null) {
             id = Guid.NewGuid().ToString();
@@ -110,6 +108,11 @@ public class Node {
     public void AddChild(Node node) {
         children.Add(node);
         childrenIds.Add(node.id);
+    }
+
+    public void RemoveChild(Node node) {
+        children.Remove(node);
+        childrenIds.Remove(node.id);
     }
 
     public void OnUpdate() {

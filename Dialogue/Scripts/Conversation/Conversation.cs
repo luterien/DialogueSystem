@@ -12,7 +12,14 @@ public class Conversation : ScriptableObject {
     }
 
     public void RemoveNode(Node node) {
-        nodes.Add(node);
+        // remove from the parents
+        for (int i=0; i < nodes.Count; i++) {
+            if (nodes[i].children.Contains(node)) {
+                nodes[i].RemoveChild(node);
+            }
+        }
+        // remove from the list
+        nodes.Remove(node);
     }
 
     public void Prepare() {

@@ -13,6 +13,7 @@ namespace DialogueSystem {
 
         private Vector2 drag;
         private bool dragging;
+        private Vector2 offset;
 
         [MenuItem("Window/Conversation Editor")]
         private static void OpenWindow() {
@@ -29,6 +30,9 @@ namespace DialogueSystem {
         }
 
         private void OnGUI() {
+
+            DrawGrid(20, 0.2f, Color.gray);
+            DrawGrid(100, 0.4f, Color.gray);
 
             if (conversation == null) {
                 DrawInfoBox("Click here to select a conversation to edit.");
@@ -162,6 +166,12 @@ namespace DialogueSystem {
             genericMenu.ShowAsContext();
         }
 
+        private void ProcessConnectionMenu(Node parent, Node child) {
+            GenericMenu genericMenu = new GenericMenu();
+            genericMenu.AddItem(new GUIContent("Remove Connection"), false, () => ConnectionHandler.Get().Destroy(parent, child));
+            genericMenu.ShowAsContext();
+        }
+
         private void AddNode(Vector2 mousePosition) {
             if (conversation != null) {
                 conversation.AddNode(
@@ -169,6 +179,11 @@ namespace DialogueSystem {
                 );
                 OnUpdate();
             }
+        }
+
+        private void RemoveNode(Node node) {
+            conversation.RemoveNode(node);
+            OnUpdate();
         }
 
         private void DrawConnections() {
@@ -183,13 +198,16 @@ namespace DialogueSystem {
                         null,
                         2f
                     );
+                    if (Handles.Button((conversation.nodes[i].rect.center + conversation.nodes[i].children[j].rect.center) * 0.5f,
+                        Quaternion.identity, 4, 8, Handles.RectangleCap)) {
+                        ProcessConnectionMenu(conversation.nodes[i], conversation.nodes[i].children[j]);
+                    }
                 }
             }
         }
 
         private void OnUpdate() {
             if (conversation) EditorUtility.SetDirty(conversation);
-            Debug.Log("saving to disk");
         }
 
         private void OnConversationPicked() {
@@ -198,6 +216,28 @@ namespace DialogueSystem {
 
         private void SelectNode() {
             Selection.activeObject = conversation;
+        }
+
+        private void DrawGrid(float gridSpacing, float gridOpacity, Color gridColor) {
+            int widthDivs = Mathf.CeilToInt(position.width / gridSpacing);
+            int heightDivs = Mathf.CeilToInt(position.height / gridSpacing);
+
+            Handles.BeginGUI();
+            Handles.color = new Color(gridColor.r, gridColor.g, gridColor.b, gridOpacity);
+
+            offset += drag * 0.5f;
+            Vector3 newOffset = new Vector3(offset.x % gridSpacing, offset.y % gridSpacing, 0);
+
+            for (int i = 0; i < widthDivs; i++) {
+                Handles.DrawLine(new Vector3(gridSpacing * i, -gridSpacing, 0) + newOffset, new Vector3(gridSpacing * i, position.height, 0f) + newOffset);
+            }
+
+            for (int j = 0; j < heightDivs; j++) {
+                Handles.DrawLine(new Vector3(-gridSpacing, gridSpacing * j, 0) + newOffset, new Vector3(position.width, gridSpacing * j, 0f) + newOffset);
+            }
+
+            Handles.color = Color.white;
+            Handles.EndGUI();
         }
 
     }

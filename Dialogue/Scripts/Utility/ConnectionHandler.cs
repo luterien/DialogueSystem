@@ -25,6 +25,10 @@ public class ConnectionHandler {
         }
     }
 
+    public void Destroy(Node parent, Node child) {
+        parent.RemoveChild(child);
+    }
+
     private void FormConnection() {
         parent.AddChild(child);
     }
