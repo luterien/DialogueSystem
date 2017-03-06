@@ -163,6 +163,7 @@ namespace DialogueSystem {
         private void ProcessNodeMenu(Node node) {
             GenericMenu genericMenu = new GenericMenu();
             genericMenu.AddItem(new GUIContent("Connect"), false, () => ConnectionHandler.Get().Add(node));
+            genericMenu.AddItem(new GUIContent("Remove"), false, () => conversation.RemoveNode(node));
             genericMenu.ShowAsContext();
         }
 

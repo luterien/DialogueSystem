@@ -12,7 +12,7 @@ public class Conversation : ScriptableObject {
     }
 
     public void RemoveNode(Node node) {
-        // remove from the parents
+        // remove as a child
         for (int i=0; i < nodes.Count; i++) {
             if (nodes[i].children.Contains(node)) {
                 nodes[i].RemoveChild(node);

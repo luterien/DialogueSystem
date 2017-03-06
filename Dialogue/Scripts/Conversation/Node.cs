@@ -12,12 +12,12 @@ public class Node {
     [HideInInspector]
     public string id;
 
-    public GUIStyle nodeStyle;
+    GUIStyle nodeStyle;
 
     //public ConnectionPoint inPoint;
     //public ConnectionPoint outPoint;
 
-    float height = 5;
+    float height = 100f;
     float width = 200f;
 
     [HideInInspector]
